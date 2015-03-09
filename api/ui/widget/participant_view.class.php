@@ -151,9 +151,9 @@ class participant_view extends base_view
         $withdraw_option = 'Withdrawn: Option #1';
       else if( in_array( $record->withdraw_letter, array( 'e', 'f', 'g', 'h' ) ) )
         $withdraw_option = 'Withdrawn: Option #2';
-      else if( in_array( $record->withdraw_letter, array( 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p' ) ) )
+      else if( in_array( $record->withdraw_letter, array( 'i', 'j' ) ) )
         $withdraw_option = 'Withdrawn: Option #3';
-      else if( in_array( $record->withdraw_letter, array( 'q', 'r', 's', 't' ) ) )
+      else if( in_array( $record->withdraw_letter, array( 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't' ) ) )
         $withdraw_option = 'Withdrawn: Option #4';
       else if( '0' == $record->withdraw_letter )
         $withdraw_option = 'Withdrawn: no option (data never provided)';
