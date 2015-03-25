@@ -96,6 +96,15 @@ class session extends \cenozo\singleton
   }
 
   /**
+   * Performs all shutdown actions
+   * @author Patrick Emond <emondpd@mcmaster.ca>
+   * @access public
+   */
+  public function shutdown()
+  {
+  }
+
+  /**
    * Processes requested site and role and sets the session appropriately.
    * 
    * @author Patrick Emond <emondpd@mcmaster.ca>

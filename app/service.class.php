@@ -294,6 +294,8 @@ final class service
       if( class_exists( 'cenozo\log' ) ) log::err( 'Last minute '.$e );
     }
     
+    $session->shutdown();
+
     // make sure to fail any active transaction
     if( $session->use_transaction() )
     {
