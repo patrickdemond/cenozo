@@ -60,10 +60,18 @@ class service_new extends base_new
   {
     parent::setup();
 
+    $setting_manager = lib::create( 'business\setting_manager' );
+
+    $record = $this->get_record();
+    $columns = $this->get_argument( 'columns', array() );
+
     // create a release event type for the new service
     $db_release_event_type = lib::create( 'database\event_type' );
+    $db_release_event_type->name = sprintf( 'release to %s', $columns['name'] );
+    $db_release_event_type->description = sprintf( 'Released the participant to %s', $columns['title'] );
     $db_release_event_type->save();
-    $this->get_record()->release_event_type_id = $db_release_event_type->id;
+    $record->release_event_type_id = $db_release_event_type->id;
+    $record->cenozo = $setting_manager->get_setting( 'general', 'cenozo_version' );
   }
 
   /**
