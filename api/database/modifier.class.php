@@ -194,8 +194,6 @@ class modifier extends \cenozo\base_object
     if( !is_string( $column ) || 0 == strlen( $column ) )
       throw lib::create( 'exception\argument', 'column', $column, __METHOD__ );
 
-    if( is_array( $value ) && 0 == count( $value ) ) return; // do nothing
-
     $this->where_list[] = array( 'column' => $column,
                                  'operator' => strtoupper( $operator ),
                                  'value' => $value,
@@ -686,25 +684,32 @@ class modifier extends \cenozo\base_object
         {
           if( is_array( $where['value'] ) )
           {
-            $first_value = true;
-            foreach( $where['value'] as $value )
+            if( 0 == count( $where['value'] ) )
             {
-              if( $where['format'] )
-              {
-                if( $convert_time )
-                  $value = $util_class_name::to_server_datetime( $value, 'H:i:s' );
-                else if( $convert_datetime )
-                  $value = $util_class_name::to_server_datetime( $value );
-                $value = $database_class_name::format_string( $value );
-              }
-
-              $statement .= $first_value
-                        ? sprintf( '%s %s( ', $where['column'], $where['operator'] )
-                        : ', ';
-              $statement .= $value;
-              $first_value = false;
+              $statement = 'IN' == $where['operator'] ? 'false' : 'true';
             }
-            $statement .= ' )';
+            else
+            {
+              $first_value = true;
+              foreach( $where['value'] as $value )
+              {
+                if( $where['format'] )
+                {
+                  if( $convert_time )
+                    $value = $util_class_name::to_server_datetime( $value, 'H:i:s' );
+                  else if( $convert_datetime )
+                    $value = $util_class_name::to_server_datetime( $value );
+                  $value = $database_class_name::format_string( $value );
+                }
+
+                $statement .= $first_value
+                          ? sprintf( '%s %s( ', $where['column'], $where['operator'] )
+                          : ', ';
+                $statement .= $value;
+                $first_value = false;
+              }
+              $statement .= ' )';
+            }
           }
           else
           {
