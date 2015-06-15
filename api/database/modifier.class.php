@@ -194,8 +194,7 @@ class modifier extends \cenozo\base_object
     if( !is_string( $column ) || 0 == strlen( $column ) )
       throw lib::create( 'exception\argument', 'column', $column, __METHOD__ );
 
-    if( is_array( $value ) && 0 == count( $value ) )
-      throw lib::create( 'exception\argument', 'value', $value, __METHOD__ );
+    if( is_array( $value ) && 0 == count( $value ) ) return; // do nothing
 
     $this->where_list[] = array( 'column' => $column,
                                  'operator' => strtoupper( $operator ),
