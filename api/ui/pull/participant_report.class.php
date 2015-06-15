@@ -153,6 +153,7 @@ class participant_report extends \cenozo\ui\pull\base_report
       ( '' === $source_id ? 'source.name AS source_name, ' : '' ).
       ( '' === $cohort_id ? 'cohort.name AS cohort_name, ' : '' ).
       ( '' === $grouping ? 'participant.grouping, ' : '' ).
+      'participant.honorific, '.
       'participant.first_name, '.
       'participant.other_name, '.
       'participant.last_name, '.

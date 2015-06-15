@@ -82,6 +82,7 @@ class participant_delink extends \cenozo\ui\push\base_record
     $this->db_new_participant->uid = $uid;
     $this->db_new_participant->source_id = $db_old_participant->source_id;
     $this->db_new_participant->cohort_id = $db_old_participant->cohort_id;
+    $this->db_new_participant->honorific = $db_old_participant->honorific;
     $this->db_new_participant->first_name = $db_old_participant->first_name;
     $this->db_new_participant->other_name = $db_old_participant->other_name;
     $this->db_new_participant->last_name = $db_old_participant->last_name;
@@ -90,6 +91,7 @@ class participant_delink extends \cenozo\ui\push\base_record
     $this->db_new_participant->save();
 
     $db_old_participant->active = false;
+    $db_old_participant->honorific = '(censored)';
     $db_old_participant->first_name = '(censored)';
     $db_old_participant->other_name = '(censored)';
     $db_old_participant->last_name = '(censored)';

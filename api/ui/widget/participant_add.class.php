@@ -46,6 +46,7 @@ class participant_add extends base_view
     $this->add_item( 'uid', is_null( $this->new_uid ) ? 'string' : 'hidden', 'Unique ID' );
     $this->add_item( 'source_id', 'enum', 'Source' );
     $this->add_item( 'cohort', 'enum', 'Cohort' );
+    $this->add_item( 'honorific', 'string', 'Honorific' );
     $this->add_item( 'first_name', 'string', 'First Name' );
     $this->add_item( 'other_name', 'string', 'Other/Nickname' );
     $this->add_item( 'last_name', 'string', 'Last Name' );
@@ -108,6 +109,7 @@ class participant_add extends base_view
     $this->set_item( 'uid', is_null( $this->new_uid ) ? '' : $this->new_uid, true );
     $this->set_item( 'source_id', key( $sources ), false, $sources );
     $this->set_item( 'cohort', key( $cohorts ), true, $cohorts );
+    $this->set_item( 'honorific', '', true );
     $this->set_item( 'first_name', '', true );
     $this->set_item( 'other_name', '', true );
     $this->set_item( 'last_name', '', true );

@@ -37,12 +37,20 @@ class participant_view extends base_view
   protected function prepare()
   {
     parent::prepare();
+    $record = $this->get_record();
+    $db_language = $record->language_id
+                 ? $record->get_language()
+                 : lib::create( 'business\session' )->get_service()->get_language();
     
     // create an associative array with everything we want to display about the participant
     $this->add_item( 'active', 'boolean', 'Active' );
     $this->add_item( 'uid', 'constant', 'Unique ID' );
     $this->add_item( 'source', 'constant', 'Source' );
     $this->add_item( 'cohort', 'constant', 'Cohort' );
+    $help = 'en' == $db_language->code
+          ? 'Example: Mr. Mrs. Miss Ms. Dr. Prof. Br. Sr. Fr. Rev. Pr.'
+          : 'Example: M. Mme Dr Dre Prof. F. Sr P. Révérend Pasteur Pasteure Me';
+    $this->add_item( 'honorific', 'string', 'Honorific', $help );
     $this->add_item( 'first_name', 'string', 'First Name' );
     $this->add_item( 'other_name', 'string', 'Other/Nickname' );
     $this->add_item( 'last_name', 'string', 'Last Name' );
@@ -166,6 +174,7 @@ class participant_view extends base_view
     $this->set_item( 'uid', $record->uid, true );
     $this->set_item( 'cohort', $record->get_cohort()->name );
     $this->set_item( 'source', $record->get_source()->name );
+    $this->set_item( 'honorific', $record->honorific );
     $this->set_item( 'first_name', $record->first_name );
     $this->set_item( 'other_name', $record->other_name );
     $this->set_item( 'last_name', $record->last_name );

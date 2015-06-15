@@ -92,6 +92,7 @@ class email_report extends \cenozo\ui\pull\base_report
       $db_language = $db_participant->get_language();
       $contents[] = array(
         is_null( $db_language ) ? 'none' : $db_language->name,
+        $db_participant->honorific,
         $db_participant->first_name,
         $db_participant->other_name,
         $db_participant->last_name,
@@ -102,7 +103,9 @@ class email_report extends \cenozo\ui\pull\base_report
 
     $header = array(
       'Language',
+      'Honorific',
       'First Name',
+      'Other Name',
       'Last Name',
       'Previous Email',
       'Email',
