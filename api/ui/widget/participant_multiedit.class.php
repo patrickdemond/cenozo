@@ -44,6 +44,7 @@ class participant_multiedit extends \cenozo\ui\widget\base_participant_multi
     $this->add_parameter( 'state_id', 'enum', 'Condition' );
     $this->add_parameter( 'language_id', 'enum', 'Language' );
     $this->add_parameter( 'override_quota', 'enum', 'Override Quota' );
+    $this->add_parameter( 'event_type_id', 'enum', 'Add Event' );
   }
 
   /**
@@ -60,6 +61,7 @@ class participant_multiedit extends \cenozo\ui\widget\base_participant_multi
     $state_class_name = lib::get_class_name( 'database\state' );
     $age_group_class_name = lib::get_class_name( 'database\age_group' );
     $language_class_name = lib::get_class_name( 'database\language' );
+    $event_type_class_name = lib::get_class_name( 'database\event_type' );
 
     // define all enum values
     $base_list = array( 'dnc' => 'do not change' );
@@ -98,6 +100,12 @@ class participant_multiedit extends \cenozo\ui\widget\base_participant_multi
     $override_quota_list['y'] = 'Yes';
     $override_quota_list['n'] = 'No';
 
+    $event_type_mod = lib::create( 'database\modifier' );
+    $event_type_mod->order( 'name' );
+    $event_type_list = $base_list;
+    foreach( $event_type_class_name::select( $event_type_mod ) as $db_event_type )
+      $event_type_list[$db_event_type->id] = $db_event_type->name;
+
     $this->set_parameter( 'active', current( $active_list ), true, $active_list );
     $this->set_parameter( 'gender', current( $gender_list ), true, $gender_list );
     $this->set_parameter( 'age_group_id', current( $age_group_list ), true, $age_group_list );
@@ -105,5 +113,6 @@ class participant_multiedit extends \cenozo\ui\widget\base_participant_multi
     $this->set_parameter( 'language_id', current( $language_list ), true, $language_list );
     $this->set_parameter(
       'override_quota', current( $override_quota_list ), true, $override_quota_list );
+    $this->set_parameter( 'event_type_id', current( $event_type_list ), true, $event_type_list );
   }
 }
