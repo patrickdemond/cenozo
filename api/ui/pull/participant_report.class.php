@@ -44,6 +44,7 @@ class participant_report extends \cenozo\ui\pull\base_report
     $service_class_name = lib::get_class_name( 'database\service' );
     $database_class_name = lib::get_class_name( 'database\database' );
     $session = lib::create( 'business\session' );
+    $service_language_id = $session->get_service()->language_id;
 
     // get the report arguments
     $collection_id = $this->get_argument( 'restrict_collection_id' );
@@ -262,6 +263,7 @@ class participant_report extends \cenozo\ui\pull\base_report
     if( '' !== $gender ) $this->modifier->where( 'participant.gender', '=', $gender );
     else $this->sql_columns .= 'participant.gender, ';
 
+    $this->sql_columns .= 'participant.date_of_birth, ';
     if( '' !== $age_group_id )
       $this->modifier->where( 'participant.age_group_id', '=', $age_group_id );
     else
@@ -290,10 +292,27 @@ class participant_report extends \cenozo\ui\pull\base_report
 
     $column =
       sprintf( 'IFNULL( participant.language_id, %s )',
-               $database_class_name::format_string( $session->get_service()->language_id ) );
+               $database_class_name::format_string( $service_language_id ) );
     if( '' !== $restrict_language_id )
       $this->modifier->where( $column, '=', $restrict_language_id );
-    else $this->sql_columns .= $column.' AS language_id, ';
+    else
+    {
+      $this->sql_columns .= 'language.name AS language, ';
+      $this->sql_tables .= sprintf( 'JOIN language ON IFNULL( participant.language_id, %s ) = language.id ', 
+                                    $database_class_name::format_string( $service_language_id ) );
+    }
+
+    if( !$uid_only )
+    {
+      $this->sql_columns .= 'IFNULL( participant_proxy.total, 0 ) AS proxy_count, ';
+      $this->sql_tables .=
+        'LEFT JOIN ( '.
+          'SELECT participant_id, COUNT(*) AS total '.
+          'FROM alternate '.
+          'WHERE proxy = 1 '.
+          'GROUP BY participant_id '.
+        ') AS participant_proxy ON participant.id = participant_proxy.participant_id ';
+    }
 
     if( '' !== $has_consent )
       $this->modifier->where(
