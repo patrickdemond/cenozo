@@ -69,9 +69,10 @@ class self_settings extends \cenozo\ui\widget
       $roles[ $db_role->id ] = $db_role->name;
     
     // themes are found in the jquery-ui 
-    $themes = array();
-    foreach( new \DirectoryIterator( JQUERY_UI_THEMES_PATH ) as $file )
-      if( !$file->isDot() && $file->isDir() ) $themes[] = $file->getFilename();
+    $themes = array(
+      'black-tie', 'blitzer', 'cupertino', 'dark-hive', 'dot-luv', 'eggplant', 'excite-bike', 'flick',
+      'hot-sneaks', 'humanity', 'le-frog', 'mint-choc', 'overcast', 'pepper-grinder', 'redmond', 'smoothness',
+      'south-street', 'start', 'sunny', 'swanky-purse', 'trontastic', 'ui-darkness', 'ui-lightness', 'vader' );
 
     $this->set_variable( 'service_title', $session->get_service()->title );
     $this->set_variable( 'user', $db_user->first_name.' '.$db_user->last_name );

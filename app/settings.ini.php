@@ -41,8 +41,6 @@ $settings['url']['JQUERY'] = '/jquery';
 $settings['url']['JQUERY_UI'] =
   $settings['url']['JQUERY'].'/ui-'.$settings['version']['JQUERY_UI'];
 $settings['url']['JQUERY_PLUGINS'] = $settings['url']['JQUERY'].'/plugins';
-$settings['path']['JQUERY_UI_THEMES'] =
-  '/var/www/jquery/ui-'.$settings['version']['JQUERY_UI'].'/css';
 
 $settings['url']['JQUERY_JS'] = 
   $settings['url']['JQUERY'].'/jquery-'.$settings['version']['JQUERY'].'.min.js';
