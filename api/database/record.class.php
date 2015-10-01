@@ -245,7 +245,7 @@ abstract class record extends \cenozo\base_object
           $sets .= sprintf( '%s %s = %s',
                             $first ? '' : ',',
                             $key,
-                            $database_class_name::format_string( $val ) );
+                            static::db()->format_string( $val ) );
 
           $first = false;
         }
@@ -865,7 +865,6 @@ abstract class record extends \cenozo\base_object
       return;
     }
     
-    $database_class_name = lib::get_class_name( 'database\database' );
     $joining_table_name = static::get_joining_table_name( $record_type );
     
     // if ids is not an array then create a single-element array with it
@@ -879,8 +878,8 @@ abstract class record extends \cenozo\base_object
       $values .= sprintf( $this->include_timestamps
                           ? '(NULL, %s, %s)'
                           : '(%s, %s)',
-                          $database_class_name::format_string( $primary_key_value ),
-                          $database_class_name::format_string( $foreign_key_value ) );
+                          static::db()->format_string( $primary_key_value ),
+                          static::db()->format_string( $foreign_key_value ) );
       $first = false;
     }
     

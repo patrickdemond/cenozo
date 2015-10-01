@@ -663,6 +663,7 @@ class modifier extends \cenozo\base_object
   {
     $util_class_name = lib::get_class_name( 'util' );
     $database_class_name = lib::get_class_name( 'database\database' );
+    $db = lib::create( 'business\session' )->get_database();
     $sql = '';
     $first_item = true;
     $last_open_bracket = false;
@@ -699,7 +700,7 @@ class modifier extends \cenozo\base_object
                     $value = $util_class_name::to_server_datetime( $value, 'H:i:s' );
                   else if( $convert_datetime )
                     $value = $util_class_name::to_server_datetime( $value );
-                  $value = $database_class_name::format_string( $value );
+                  $value = $db->format_string( $value );
                 }
 
                 $statement .= $first_value
@@ -718,7 +719,7 @@ class modifier extends \cenozo\base_object
             {
               if( $convert_time ) $value = $util_class_name::to_server_datetime( $value, 'H:i:s' );
               else if( $convert_datetime ) $value = $util_class_name::to_server_datetime( $value );
-              $value = $database_class_name::format_string( $value );
+              $value = $db->format_string( $value );
             }
 
             $statement = sprintf( '%s %s( %s )',
@@ -734,7 +735,7 @@ class modifier extends \cenozo\base_object
           {
             if( $convert_time ) $value = $util_class_name::to_server_datetime( $value, 'H:i:s' );
             else if( $convert_datetime ) $value = $util_class_name::to_server_datetime( $value );
-            $value = $database_class_name::format_string( $value );
+            $value = $db->format_string( $value );
           }
           
           if( 'NULL' == $value )
@@ -803,6 +804,7 @@ class modifier extends \cenozo\base_object
   {
     $util_class_name = lib::get_class_name( 'util' );
     $database_class_name = lib::get_class_name( 'database\database' );
+    $db = lib::create( 'business\session' )->get_database();
     $sql = '';
     $first_item = true;
     $last_open_bracket = false;
@@ -833,7 +835,7 @@ class modifier extends \cenozo\base_object
                   $value = $util_class_name::to_server_datetime( $value, 'H:i:s' );
                 else if( $convert_datetime )
                   $value = $util_class_name::to_server_datetime( $value );
-                $value = $database_class_name::format_string( $value );
+                $value = $db->format_string( $value );
               }
 
               $statement .= $first_value
@@ -851,7 +853,7 @@ class modifier extends \cenozo\base_object
             {
               if( $convert_time ) $value = $util_class_name::to_server_datetime( $value, 'H:i:s' );
               else if( $convert_datetime ) $value = $util_class_name::to_server_datetime( $value );
-              $value = $database_class_name::format_string( $value );
+              $value = $db->format_string( $value );
             }
 
             $statement = sprintf( '%s %s( %s )',
@@ -867,7 +869,7 @@ class modifier extends \cenozo\base_object
           {
             if( $convert_time ) $value = $util_class_name::to_server_datetime( $value, 'H:i:s' );
             else if( $convert_datetime ) $value = $util_class_name::to_server_datetime( $value );
-            $value = $database_class_name::format_string( $value );
+            $value = $db->format_string( $value );
           }
           
           if( 'NULL' == $value )

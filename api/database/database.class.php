@@ -615,10 +615,9 @@ class database extends \cenozo\base_object
    * @author Patrick Emond <emondpd@mcmaster.ca>
    * @param string $string The string to format for use in a query.
    * @return string
-   * @static
    * @access public
    */
-  public static function format_string( $string )
+  public function format_string( $string )
   {
     // NULL values are returned as a MySQL NULL value
     if( is_null( $string ) ) return 'NULL';
@@ -635,9 +634,8 @@ class database extends \cenozo\base_object
     }
     else
     {
-      $db = lib::create( 'business\session' )->get_database();
-      $string = 'mysqli' == $db->driver
-              ? mysqli_real_escape_string( $db->connection->_connectionID, $string )
+      $string = 'mysqli' == $this->driver
+              ? mysqli_real_escape_string( $this->connection->_connectionID, $string )
               : mysql_real_escape_string( $string );
       return sprintf( '"%s"', $string );
     }
