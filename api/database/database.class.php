@@ -57,15 +57,16 @@ class database extends \cenozo\base_object
       '%s%s',
       $setting_manager->get_setting( 'db', 'database_prefix' ),
       $setting_manager->get_setting( 'general', 'framework_name' ) );
+    $schema_list = array( '"'.$this->name.'"', '"'.$framework_name.'"' );
 
     $column_mod = lib::create( 'database\modifier' );
-    $column_mod->where( 'table_schema', 'IN', array( $this->name, $framework_name ) );
-    $column_mod->where( 'column_name', '!=', 'update_timestamp' ); // ignore timestamp columns
-    $column_mod->where( 'column_name', '!=', 'create_timestamp' );
-    $column_mod->where( 'column_type', '!=', 'mediumtext' ); // ignore really big data types
-    $column_mod->where( 'column_type', '!=', 'longtext' );
-    $column_mod->where( 'column_type', '!=', 'mediumblob' );
-    $column_mod->where( 'column_type', '!=', 'longblob' );
+    $column_mod->where( 'table_schema', 'IN', $schema_list, false );
+    $column_mod->where( 'column_name', '!=', '"update_timestamp"', false ); // ignore timestamp columns
+    $column_mod->where( 'column_name', '!=', '"create_timestamp"', false );
+    $column_mod->where( 'column_type', '!=', '"mediumtext"', false ); // ignore really big data types
+    $column_mod->where( 'column_type', '!=', '"longtext"', false );
+    $column_mod->where( 'column_type', '!=', '"mediumblob"', false );
+    $column_mod->where( 'column_type', '!=', '"longblob"', false );
     $column_mod->order( 'table_name' );
     $column_mod->order( 'column_name' );
 
@@ -99,14 +100,9 @@ class database extends \cenozo\base_object
     }
 
     $constraint_mod = lib::create( 'database\modifier' );
-    $constraint_mod->where(
-      'TABLE_CONSTRAINTS.TABLE_SCHEMA', 'IN', array( $this->name, $framework_name ) );
-    $constraint_mod->where(
-      'KEY_COLUMN_USAGE.TABLE_SCHEMA', 'IN', array( $this->name, $framework_name ) );
-    $constraint_mod->where(
-      'TABLE_CONSTRAINTS.CONSTRAINT_TYPE', '=', 'UNIQUE' );
-    $constraint_mod->where(
-      'TABLE_CONSTRAINTS.CONSTRAINT_NAME', '=', 'KEY_COLUMN_USAGE.CONSTRAINT_NAME', false );
+    $constraint_mod->where( 'TABLE_CONSTRAINTS.TABLE_SCHEMA', 'IN', $schema_list, false );
+    $constraint_mod->where( 'TABLE_CONSTRAINTS.CONSTRAINT_TYPE', '=', '"UNIQUE"', false );
+    $constraint_mod->where( 'TABLE_CONSTRAINTS.CONSTRAINT_NAME', '=', 'KEY_COLUMN_USAGE.CONSTRAINT_NAME', false );
     $constraint_mod->group( 'table_name' );
     $constraint_mod->group( 'constraint_name' );
     $constraint_mod->group( 'column_name' );
@@ -632,8 +628,19 @@ class database extends \cenozo\base_object
 
     // trim whitespace from the begining and end of the string
     if( is_string( $string ) ) $string = trim( $string );
-    
-    return 0 == strlen( $string ) ? 'NULL' : sprintf( '"%s"', mysql_real_escape_string( $string ) );
+
+    if( 0 == strlen( $string ) )
+    {
+      return 'NULL';
+    }
+    else
+    {
+      $db = lib::create( 'business\session' )->get_database();
+      $string = 'mysqli' == $db->driver
+              ? mysqli_real_escape_string( $db->connection->_connectionID, $string )
+              : mysql_real_escape_string( $string );
+      return sprintf( '"%s"', $string );
+    }
   }
   
   /**
