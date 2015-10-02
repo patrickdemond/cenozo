@@ -381,10 +381,19 @@ class util
    */
   public static function send_http_error( $data )
   {
-    \HttpResponse::status( 400 );
-    \HttpResponse::setContentType( 'application/json' ); 
-    \HttpResponse::setData( $data );
-    \HttpResponse::send();
+    if( class_exists( '\HttpResponse' ) ) 
+    { // pecl_http version 1
+      \HttpResponse::status( 400 );
+      \HttpResponse::setContentType( 'application/json' );  
+      \HttpResponse::setData( $data );
+      \HttpResponse::send();
+    }   
+    else
+    { // pecl_http version 2
+      http_response_code( 400 );
+      header( 'Content-type: application/json' );
+      print $data;
+    }   
   }
   
   /**
