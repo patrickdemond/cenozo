@@ -38,7 +38,9 @@ final class service
     if( array_key_exists( 'REDIRECT_URL', $_SERVER ) )
     {
       $base_self_path = substr( $_SERVER['PHP_SELF'], 0, strrpos( $_SERVER['PHP_SELF'], '/' ) + 1 );
-      $this->base_url = str_replace( $base_self_path, '', $_SERVER['REDIRECT_URL'] );
+      $this->base_url = substr(
+        $_SERVER['REDIRECT_URL'],
+        strpos( $_SERVER['REDIRECT_URL'], $base_self_path ) + strlen( $base_self_path ) );
       $this->url_tokens = explode( '/', $this->base_url );
 
       if( 'slot' == $this->url_tokens[0] ) $this->operation_type = 'widget';
