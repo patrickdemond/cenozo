@@ -530,7 +530,7 @@ final class log extends singleton
              E_DEPRECATED == $level ||
              E_USER_DEPRECATED == $level )
     {
-      log::warning( $message );
+      if( '(700008) : Array to string conversion' != substr( $message, 0, 37 ) ) log::warning( $message );
     }
     
     // from PHP docs:
