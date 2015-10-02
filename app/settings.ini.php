@@ -21,7 +21,12 @@ $settings['general']['maintenance_mode'] = false;
 // always leave as false when running as production server
 $settings['general']['development_mode'] = false;
 
-$settings['path']['COOKIE'] = substr( $_SERVER['SCRIPT_NAME'], 0, -9 );
+$settings['path']['COOKIE'] = $_SERVER['REQUEST_URI'];
+if( array_key_exists( 'HTTP_REFERER', $_SERVER ) )
+{
+  $referer = $_SERVER['HTTP_REFERER'];
+  $settings['path']['COOKIE'] = substr( $referer, strpos( $referer, '/', strpos( $referer, '//' ) + 2 ) );
+}
 
 // the location of cenozo internal path
 $settings['path']['CENOZO'] = '/usr/local/lib/cenozo';
