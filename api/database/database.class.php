@@ -47,7 +47,11 @@ class database extends \cenozo\base_object
     $this->connection = ADONewConnection( $this->driver );
     $this->connection->SetFetchMode( ADODB_FETCH_ASSOC );
     
-    $this->connect();
+    if( false == $this->connection->Connect(
+      $this->server, $this->username, $this->password, $this->name ) )
+      throw lib::create( 'exception\runtime',
+        sprintf( 'Unable to connect to the "%s" database.', $this->name ), __METHOD__ );
+
     if( lib::in_development_mode() ) $this->execute( 'SET profiling = 1', false );
     $this->read_schema();
   }
@@ -415,7 +419,6 @@ class database extends \cenozo\base_object
   {
     $util_class_name = lib::get_class_name( 'util' );
 
-    $this->connect();
     if( $add_database_names ) $sql = $this->add_database_names( $sql );
     
     if( self::$debug )
@@ -464,7 +467,6 @@ class database extends \cenozo\base_object
   {
     $util_class_name = lib::get_class_name( 'util' );
 
-    $this->connect();
     if( $add_database_names ) $sql = $this->add_database_names( $sql );
 
     if( self::$debug )
@@ -501,7 +503,6 @@ class database extends \cenozo\base_object
   {
     $util_class_name = lib::get_class_name( 'util' );
 
-    $this->connect();
     if( $add_database_names ) $sql = $this->add_database_names( $sql );
 
     if( self::$debug )
@@ -538,7 +539,6 @@ class database extends \cenozo\base_object
   {
     $util_class_name = lib::get_class_name( 'util' );
 
-    $this->connect();
     if( $add_database_names ) $sql = $this->add_database_names( $sql );
 
     if( self::$debug )
@@ -576,7 +576,6 @@ class database extends \cenozo\base_object
   {
     $util_class_name = lib::get_class_name( 'util' );
 
-    $this->connect();
     if( $add_database_names ) $sql = $this->add_database_names( $sql );
 
     if( self::$debug )
@@ -609,7 +608,6 @@ class database extends \cenozo\base_object
    */
   public function insert_id()
   {
-    $this->connect();
     $id = $this->connection->Insert_ID();
     if( self::$debug ) log::debug( '(DB) insert ID = '.$id );
     return $id;
@@ -626,7 +624,6 @@ class database extends \cenozo\base_object
    */
   public function affected_rows()
   {
-    $this->connect();
     $num = $this->connection->Affected_Rows();
     if( self::$debug ) log::debug( '(DB) affected rows = '.$num );
     return $num;
@@ -851,27 +848,6 @@ class database extends \cenozo\base_object
   }
 
   /**
-   * Since ADODB does not support multiple database with the same driver this method must be
-   * called before using the connection member.
-   * This method is necessary because ADODB cannot connect to more than one database of the
-   * same driver at the same time:
-   * http://php.bigresource.com/ADODB-Multiple-Database-Connection-wno2zASC.html
-   * @author Patrick Emond <emondpd@mcmaster.ca>
-   * @access private
-   */
-  private function connect()
-  {
-    if( $this->name != static::$current_database )
-    {
-      if( false == $this->connection->Connect(
-        $this->server, $this->username, $this->password, $this->name ) )
-        throw lib::create( 'exception\runtime',
-          sprintf( 'Unable to connect to the "%s" database.', $this->name ), __METHOD__ );
-      static::$current_database = $this->name;
-    }
-  }
-
-  /**
    * When set to true all queries will be sent to the debug log
    * @var boolean
    * @static
@@ -892,14 +868,6 @@ class database extends \cenozo\base_object
    * @access protected
    */
   protected $connection;
-
-  /**
-   * Tracks which database was connected to last.
-   * @var string
-   * @static
-   * @access protected
-   */
-  protected static $current_database = '';
 
   /**
    * The database driver (see ADODB for possible values)
