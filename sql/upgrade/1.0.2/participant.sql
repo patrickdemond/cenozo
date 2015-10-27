@@ -45,6 +45,20 @@ CREATE PROCEDURE patch_participant()
       WHERE first_name = "(censored)";
     END IF;
 
+    SELECT "Add new out_of_area column to participant table" AS "";
+
+    SET @test = (
+      SELECT COUNT(*)
+      FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = "participant"
+      AND COLUMN_NAME = "out_of_area" );
+    IF @test = 0 THEN
+      ALTER TABLE participant 
+      ADD COLUMN out_of_area TINYINT(1) NOT NULL DEFAULT 0
+      AFTER withdraw_letter;
+    END IF;
+
   END //
 DELIMITER ;
 

@@ -407,6 +407,7 @@ CREATE TABLE IF NOT EXISTS `cenozo`.`participant` (
   `email_old` VARCHAR(255) NULL DEFAULT NULL,
   `email_do_not_contact` TINYINT(1) NOT NULL DEFAULT 0,
   `withdraw_letter` CHAR(1) NULL DEFAULT NULL,
+  `out_of_area` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `uq_uid` (`uid` ASC),
   UNIQUE INDEX `uq_person_id` (`person_id` ASC),

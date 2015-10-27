@@ -79,6 +79,7 @@ class participant_view extends base_view
     $this->add_item( 'date_of_birth', 'date', 'Date of Birth' );
     $this->add_item( 'age_group_id', 'enum', 'Age Group' );
     $this->add_item( 'state_id', 'enum', 'Condition' );
+    $this->add_item( 'out_of_area', 'boolean', 'Out of Area' );
     $this->add_item( 'withdraw_option', 'constant', 'Withdraw Option' );
     $this->add_item( 'override_quota', 'boolean', 'Override Quota' );
 
@@ -181,6 +182,7 @@ class participant_view extends base_view
     $this->set_item( 'language_id', $record->language_id, false, $languages );
     $this->set_item( 'state_id', $record->state_id, false, $states );
     $this->set_item( 'withdraw_option', $withdraw_option );
+    $this->set_item( 'out_of_area', $record->out_of_area, true );
     $this->set_item( 'override_quota', $record->override_quota, true );
 
     // set items for default and preferred sites for all services the participant's cohort
