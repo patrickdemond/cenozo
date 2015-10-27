@@ -57,6 +57,13 @@ CREATE PROCEDURE patch_participant()
       ALTER TABLE participant 
       ADD COLUMN out_of_area TINYINT(1) NOT NULL DEFAULT 0
       AFTER withdraw_letter;
+
+      UPDATE participant
+      SET out_of_area = 1
+      WHERE state_id IN (
+        SELECT id FROM state
+        WHERE name IN( "Out of DCS Area", "Moved out of Country" )
+      );
     END IF;
 
   END //
