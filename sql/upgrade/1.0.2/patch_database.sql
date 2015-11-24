@@ -6,6 +6,7 @@ SOURCE participant.sql
 SOURCE event.sql
 SOURCE event_type.sql
 SOURCE event_address.sql
+SOURCE variable_cache.sql
 
 SOURCE update_version_number.sql
 

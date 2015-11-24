@@ -135,6 +135,102 @@ class opal_manager extends \cenozo\factory
   }
 
   /**
+   * Get a participant's set of values for a particular table
+   * 
+   * @author Patrick Emond <emondpd@mcmaster.ca>
+   * @param string $datasource The datasource to get a value from
+   * @param string $table The table to get a value from
+   * @param database\participant $db_participant The participant to get a value from
+   * @return string
+   * @throws exception\argument, exception\runtime
+   * @access public
+   */
+  public function get_values( $datasource, $table, $db_participant )
+  {
+    $util_class_name = lib::get_class_name( 'util' );
+
+    if( is_null( $db_participant ) )
+      throw lib::create( 'exception\argument', 'db_participant', $db_participant, __METHOD__ );
+
+    // prepare the http request
+    $authorization = sprintf( '%s:%s', $this->username, $this->password );
+    $request = new \HttpRequest();
+    $request->setMethod( \HttpRequest::METH_GET );
+    $request->addHeaders( array(
+      'Authorization' => 'X-Opal-Auth '.base64_encode( $authorization ),
+      'Accept' => 'application/json' ) );
+
+    // send the http request
+    $url = sprintf(
+      'https://%s:%d/ws/datasource/%s/table/%s/valueSet/%s',
+      $this->server,
+      $this->port,
+      rawurlencode( $datasource ),
+      rawurlencode( $table ),
+      $db_participant->uid );
+    $request->setUrl( $url );
+    
+    try
+    {
+      $message = $request->send();
+    }
+    catch( \Exception $e )
+    {
+      // We've caught one of HttpRuntime, HttpRequest, HttpMalformedHeader or HttpEncoding Exceptions
+      // These errors may be transient, so instruct the user to reload the page
+      throw lib::create( 'exception\notice',
+        'The server appears to be busy, please try reloading the page. '.
+        'If this still does not fix the problem please report the issue to a superior.',
+        __METHOD__ );
+    }
+
+    $code = $message->getResponseCode();
+    if( 404 == $code )
+    { // 404 on missing data
+      throw lib::create( 'exception\argument', 'participant', $db_participant->uid, __METHOD__ );
+    }
+    else if( 200 != $code )
+    {
+      throw lib::create( 'exception\runtime',
+        sprintf( 'Unable to connect to Opal service for url "%s" (code: %s)', $url, $code ),
+        __METHOD__ );
+    }
+
+    $object = $util_class_name::json_decode( $message->body );
+    if( !is_object( $object ) ||
+        !property_exists( $object, 'variables' ) ||
+        !is_array( $object->variables ) ||
+        !property_exists( $object, 'valueSets' ) ||
+        !is_array( $object->valueSets ) ||
+        1 != count( $object->valueSets ) )
+    {
+      throw lib::create( 'exception\runtime',
+        sprintf( 'Unrecognized response from Opal service for url "%s"', $url ),
+        __METHOD__ );
+    }
+
+    // Opal should have returned the data in the following format:
+    // {
+    //   "variables": [ "CCT_OAKNEE_TRM", "CCT_OAHAND_TRM", ...  ],
+    //   "valueSets": [ {
+    //     "identifier": "A003019",
+    //     "values": [ {"value": "NO"}, {"value": "NO"}, ...  ],
+    //   } ]
+    // }
+    $values = array();
+    foreach( $object->variables as $index => $variable )
+    {
+      $values[$variable] = is_object( $object->valueSets[0]->values[$index] ) &&
+                           property_exists( $object->valueSets[0]->values[$index], 'value' )
+                         ? $object->valueSets[0]->values[$index]->value
+                         : NULL;
+    }
+
+    return $values;
+  }
+
+  /**
+  /**
    * Get a label for a particular variable's value
    * 
    * @author Patrick Emond <emondpd@mcmaster.ca>
