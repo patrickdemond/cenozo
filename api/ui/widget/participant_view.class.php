@@ -125,10 +125,11 @@ class participant_view extends base_view
     parent::setup();
 
     $participant_class_name = lib::get_class_name( 'database\participant' );
-    $state_class_name = lib::get_class_name( 'database\state' );
     $age_group_class_name = lib::get_class_name( 'database\age_group' );
     $operation_class_name = lib::get_class_name( 'database\operation' );
     $language_class_name = lib::get_class_name( 'database\language' );
+
+    $session = lib::create( 'business\session' );
 
     // create enum arrays
     $genders = $participant_class_name::get_enum_values( 'gender' );
@@ -142,7 +143,7 @@ class participant_view extends base_view
     $states = array();
     $state_mod = lib::create( 'database\modifier' );
     $state_mod->order( 'rank' );
-    foreach( $state_class_name::select( $state_mod ) as $db_state )
+    foreach( $session->get_role()->get_state_list( $state_mod ) as $db_state )
       $states[$db_state->id] = $db_state->name;
     $age_groups = array();
     $age_group_mod = lib::create( 'database\modifier' );
@@ -257,7 +258,7 @@ class participant_view extends base_view
 
     // add an delink action
     $db_operation = $operation_class_name::get_operation( 'push', 'participant', 'delink' );
-    if( lib::create( 'business\session' )->is_allowed( $db_operation ) )
+    if( $session->is_allowed( $db_operation ) )
     {
       $this->set_variable( 'allow_delink', true );
       $this->add_action( 'delink', 'De-Link', NULL,
@@ -267,7 +268,7 @@ class participant_view extends base_view
 
     // add an hin action
     $db_operation = $operation_class_name::get_operation( 'widget', 'participant', 'hin' );
-    if( lib::create( 'business\session' )->is_allowed( $db_operation ) )
+    if( $session->is_allowed( $db_operation ) )
       $this->add_action( 'hin', 'HIN', $db_operation,
         'Edit the participant\'s health insurance number.' );
   }
