@@ -148,7 +148,7 @@ class participant_view extends base_view
       $states[$db_state->id] = $db_state->name;
     // make sure to add the participant's current state, in case the user doesn't have access to it
     if( !is_null( $record->state_id ) && !array_key_exists( $record->state_id, $states ) )
-      $states[$state_id] = $record->get_state()->name;
+      $states[$record->state_id] = $record->get_state()->name;
     $age_groups = array();
     $age_group_mod = lib::create( 'database\modifier' );
     $age_group_mod->order( 'lower' );

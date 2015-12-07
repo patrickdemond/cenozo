@@ -75,7 +75,7 @@ class participant_edit extends base_edit
       {
         throw lib::create( 'exception\notice',
           sprintf(
-            'Your role is not permitted to use set a participant\'s condition to %s. '.
+            'Your role is not permitted to set a participant\'s condition to %s. '.
             'Please contact your superior for more information.',
             $db_state->name ),
           __METHOD__ );
