@@ -129,6 +129,7 @@ class participant_view extends base_view
     $operation_class_name = lib::get_class_name( 'database\operation' );
     $language_class_name = lib::get_class_name( 'database\language' );
 
+    $record = $this->get_record();
     $session = lib::create( 'business\session' );
 
     // create enum arrays
@@ -145,13 +146,15 @@ class participant_view extends base_view
     $state_mod->order( 'rank' );
     foreach( $session->get_role()->get_state_list( $state_mod ) as $db_state )
       $states[$db_state->id] = $db_state->name;
+    // make sure to add the participant's current state, in case the user doesn't have access to it
+    if( !is_null( $record->state_id ) && !array_key_exists( $states ) )
+      $states[$state_id] = $record->get_state()->name;
     $age_groups = array();
     $age_group_mod = lib::create( 'database\modifier' );
     $age_group_mod->order( 'lower' );
     foreach( $age_group_class_name::select( $age_group_mod ) as $db_age_group )
       $age_groups[$db_age_group->id] = $db_age_group->to_string();
 
-    $record = $this->get_record();
     $db_age_group = $record->get_age_group();
 
     $withdraw_option = 'Not withdrawn';
