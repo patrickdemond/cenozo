@@ -633,6 +633,7 @@ class modifier extends \cenozo\base_object
   public function get_join()
   {
     $sql = '';
+    $first = true;
     foreach( $this->join_list as $join )
     {
       $type = sprintf( '%s%sJOIN', $join['type'], 'STRAIGHT' == $join['type'] ? '_' : ' ' );
@@ -640,6 +641,8 @@ class modifier extends \cenozo\base_object
       // remove the " AND " at the beginning of the appended where clause
       $on_clause = preg_replace( '/^ AND /', '', $on_clause );
 
+      if( $first ) $first = false;
+      else $sql .= ' ';
       $sql .= sprintf( '%s %s ON %s',
                        $type,
                        $join['table'],
