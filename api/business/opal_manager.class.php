@@ -108,8 +108,8 @@ class opal_manager extends \cenozo\factory
         // We've caught one of HttpRuntime, HttpRequest, HttpMalformedHeader or HttpEncoding Exceptions
         // These errors may be transient, so instruct the user to reload the page
         throw lib::create( 'exception\notice',
-          'The server appears to be busy, please try reloading the page. '.
-          'If this still does not fix the problem please report the issue to a superior.',
+          'The Opal server appears to be busy, please wait a moment and try reloading the page. '.
+          'If this still does not fix the problem please contact support.',
           __METHOD__ );
       }
 
@@ -179,8 +179,8 @@ class opal_manager extends \cenozo\factory
       // We've caught one of HttpRuntime, HttpRequest, HttpMalformedHeader or HttpEncoding Exceptions
       // These errors may be transient, so instruct the user to reload the page
       throw lib::create( 'exception\notice',
-        'The server appears to be busy, please try reloading the page. '.
-        'If this still does not fix the problem please report the issue to a superior.',
+        'The Opal server appears to be busy, please wait a moment and try reloading the page. '.
+        'If this still does not fix the problem please contact support.',
         __METHOD__ );
     }
 
@@ -335,8 +335,8 @@ class opal_manager extends \cenozo\factory
         // We've caught one of HttpRuntime, HttpRequest, HttpMalformedHeader or HttpEncoding Exceptions
         // These errors may be transient, so instruct the user to reload the page
         throw lib::create( 'exception\notice',
-          'The server appears to be busy, please try reloading the page. '.
-          'If this still does not fix the problem please report the issue to a superior.',
+          'The Opal server appears to be busy, please wait a moment and try reloading the page. '.
+          'If this still does not fix the problem please contact support.',
           __METHOD__ );
       }
 
