@@ -168,6 +168,8 @@ class participant_edit extends base_edit
         $db_hin->access = $columns['hin_access'];
       if( array_key_exists( 'hin_future_access', $columns ) )
         $db_hin->future_access = $columns['hin_future_access'];
+      if( array_key_exists( 'hin_extended_access', $columns ) )
+        $db_hin->extended_access = $columns['hin_extended_access'];
       if( array_key_exists( 'hin_code', $columns ) )
         $db_hin->code = $columns['hin_code'];
       if( array_key_exists( 'hin_region_id', $columns ) )

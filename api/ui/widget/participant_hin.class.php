@@ -59,6 +59,7 @@ class participant_hin extends base_view
     // create an associative array with everything we want to display about the participant
     $this->add_item( 'hin_access', 'boolean', 'Consent to provide' );
     $this->add_item( 'hin_future_access', 'boolean', 'Consent for future linkage' );
+    $this->add_item( 'hin_extended_access', 'boolean', 'Consent for extended linkage' );
     $this->add_item( 'hin_code', 'string', 'Health Insurance Number', $code_help );
     $this->add_item( 'hin_region_id', 'enum', 'Health Insurance Province' );
   }
@@ -88,6 +89,8 @@ class participant_hin extends base_view
       is_null( $db_hin ) ? NULL : $db_hin->access, false );
     $this->set_item( 'hin_future_access',
       is_null( $db_hin ) ? NULL : $db_hin->future_access, false );
+    $this->set_item( 'hin_extended_access',
+      is_null( $db_hin ) ? NULL : $db_hin->extended_access, false );
     $this->set_item( 'hin_code',
       is_null( $db_hin ) ? NULL : $db_hin->code, false );
     $this->set_item( 'hin_region_id',
